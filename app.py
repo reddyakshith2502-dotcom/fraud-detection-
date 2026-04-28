@@ -19,7 +19,7 @@ def upload():
     try:
         use_local = request.form.get('use_local')
         if use_local == 'yes':
-            df = pd.read_csv('dataset.csv')
+            df = pd.read_csv('demo_dataset.csv')
             print("LOCAL FILE READ SUCCESS")
         else:
             if 'file' not in request.files:
