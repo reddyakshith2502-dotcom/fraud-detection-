@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Fraud Detection</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(-45deg, #bcf128, #ec35d0, #2ab2ec, #fbb913);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            width: 60%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            animation: fadeIn 1.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(30px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            background: #00c6ff;
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 20px #00c6ff;
+        }
+
+        .result-box {
+            margin-top: 30px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            color: white;
+        }
+
+        th {
+            background: rgba(0,0,0,0.4);
+            padding: 8px;
+        }
+
+        td {
+            padding: 6px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .summary {
+            margin-top: 20px;
+            font-size: 16px;
+            animation: fadeIn 1s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h1>💳 AI Fraud Detection</h1>
+    <p>Upload your transaction data and detect fraud instantly</p>
+
+   <form action="/upload" method="post" enctype="multipart/form-data">
+    <p style="font-size: 14px; margin-bottom: 5px;">Upload a custom dataset:</p>
+    <input type="file" name="file">
+    
+    <label style="display: block; margin: 15px 0; font-size: 14px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; cursor: pointer;">
+        <input type="checkbox" name="use_local" value="yes" style="margin-right: 8px; transform: scale(1.2);"> 
+        ⚡ <b>Fast Analyze:</b> Use included full dataset (~150MB, avoids upload limits)
+    </label>
+    <button type="submit">Analyze</button>
+</form>
+    {% if error %}
+    <div style="background-color: #ff4d4d; color: white; padding: 15px; border-radius: 10px; margin-top: 20px;">
+        <p>⚠️ <b>Error Processing File:</b> {{ error }}</p>
+        <p style="font-size: 14px; margin-top: 5px;"><i>(Note: Hugging Face Spaces free tier blocks files larger than ~20-50MB. Please check the Fast Analyze option.)</i></p>
+    </div>
+    {% endif %}
+
+    {% if fraud_count is not none %}
+    <div class="summary">
+        <p>🚨 Fraud Transactions Detected: {{ fraud_count }}</p>
+        <p>✅ Safe Transactions: {{ safe_count }}</p>
+        <p>📊 Fraud Rate: {{ fraud_percent }}%</p>
+    </div>
+    {% endif %}
+
+    <div class="result-box">
+        {{ table|safe }}
+    </div>
+</div>
+
+</body>
+</html>
