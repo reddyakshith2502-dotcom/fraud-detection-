@@ -50,10 +50,11 @@ def upload():
         safe_rows = df[df['Fraud Result'] == 0].head(5)
         sample = pd.concat([fraud_rows, safe_rows])
         
-        # Convert 1/0 to readable words for the table display
-        sample['Fraud Result'] = sample['Fraud Result'].replace({1: '🚨 FRAUD', 0: '✅ SAFE'})
+        # Keep 1/0 in Fraud Result and add a new explicit 'Status' column beside it
+        sample['Status'] = sample['Fraud Result'].replace({1: '🚨 FRAUD', 0: '✅ SAFE'})
         
-        table = sample[['Amount', 'Fraud Result']].to_html(index=False)
+        # Generate table including Amount, Fraud Result, and Status
+        table = sample[['Amount', 'Fraud Result', 'Status']].to_html(index=False)
 
         return render_template(
             'index.html',
