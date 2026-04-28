@@ -49,6 +49,10 @@ def upload():
         fraud_rows = df[df['Fraud Result'] == 1].head(5)
         safe_rows = df[df['Fraud Result'] == 0].head(5)
         sample = pd.concat([fraud_rows, safe_rows])
+        
+        # Convert 1/0 to readable words for the table display
+        sample['Fraud Result'] = sample['Fraud Result'].replace({1: '🚨 FRAUD', 0: '✅ SAFE'})
+        
         table = sample[['Amount', 'Fraud Result']].to_html(index=False)
 
         return render_template(
